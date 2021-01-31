@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test-upload</title>
+  </head>
+  <body>
+    <div class="container">
+      <form
+        method="POST"
+        action="/api/auth/avatar/upload/"
+        enctype="multipart/form-data"
+      >
+        <p>Загрузите файл с картинкой</p>
+        <p><input type="file" name="filedata" /></p>
+        <input type="submit" value="GO">
+      </form>
+    </div>
+  </body>
+</html>
