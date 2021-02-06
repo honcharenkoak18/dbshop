@@ -1,5 +1,6 @@
 node_modules
 config/default.json
+doc/~*
 
 # local env files
 .env.local
