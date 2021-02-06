@@ -38,3 +38,35 @@ CREATE TABLE  `myshop`.`comment` (
   CONSTRAINT `fk_comment_author` FOREIGN KEY (`author_id`) REFERENCES  `myshop`.`user` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_comment_post` FOREIGN KEY (`post_id`) REFERENCES  `myshop`.`post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE
+VIEW `cmtbypost_cnt` AS
+  SELECT 
+    `comment`.`post_id` AS `post_id`, COUNT(0) AS `comments`
+  FROM
+    `comment`
+  GROUP BY `comment`.`post_id`;
+CREATE 
+VIEW `posts_info` AS
+  SELECT 
+    `post`.`id` AS `id`,
+    `post`.`title` AS `title`,
+    `profile`.`user_name` AS `author`,
+    `post`.`post_date` AS `date`,
+    `post`.`short_content` AS `short`,
+    `cmt`.`comments` AS `comments`
+  FROM
+    ((`post`
+    JOIN `profile` ON ((`post`.`author_id` = `profile`.`uuid`)))
+    LEFT JOIN `cmtbypost_cnt` `cmt` ON ((`cmt`.`post_id` = `post`.`id`)))
+  ORDER BY `post`.`post_date` DESC
+CREATE
+VIEW `user_info` AS
+  SELECT 
+    BIN_TO_UUID(`usr`.`uuid`) AS `uuid`,
+    `usr`.`email` AS `email`,
+    `prf`.`user_name` AS `user_name`,
+    `usr`.`role` AS `role`,
+    `prf`.`avatar` AS `avatar`
+  FROM
+    (`user` `usr`
+    JOIN `profile` `prf` ON ((`prf`.`uuid` = `usr`.`uuid`)))

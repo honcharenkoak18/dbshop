@@ -78,13 +78,7 @@ const User = {
   async getUsers() {
     try {
       const connection = await db()
-      const queryUsers =
-        'SELECT BIN_TO_UUID(usr.uuid) as uuid, usr.email, prf.user_name, usr.role FROM  `' +
-        dbName +
-        '`.`user` as usr ' +
-        'inner join `' +
-        dbName +
-        '`.`profile` as prf on prf.uuid = usr.uuid'
+      const queryUsers = 'SELECT * FROM `' + dbName + '`.`user_info` as usr '
       const [rows] = await connection.query(queryUsers)
       return rows
     } catch (error) {
@@ -96,13 +90,10 @@ const User = {
     try {
       const connection = await db()
       const queryUser =
-        'SELECT BIN_TO_UUID(usr.uuid) as uuid, usr.email, prf.user_name, usr.role, prf.avatar FROM `' +
+        'SELECT * FROM `' +
         dbName +
-        '`.`user` as usr ' +
-        'inner join `' +
-        dbName +
-        '`.`profile` as prf on prf.uuid = usr.uuid ' +
-        'WHERE BIN_TO_UUID(usr.uuid) = ?'
+        '`.`user_info` as usr ' +
+        'WHERE usr.uuid = ?'
       const [rows] = await connection.query(queryUser, [uuid])
       if (rows.length === 0) {
         return {}
@@ -118,12 +109,9 @@ const User = {
     try {
       const connection = await db()
       const queryUsers =
-        'SELECT BIN_TO_UUID(usr.uuid) as uuid, usr.email, prf.user_name, usr.role, usr.password, prf.avatar FROM `' +
+        'SELECT * FROM `' +
         dbName +
-        '`.`user` as usr ' +
-        'inner join `' +
-        dbName +
-        '`.`profile` as prf on prf.uuid = usr.uuid ' +
+        '`.`user_info` as usr ' +
         'WHERE usr.email = ?'
 
       const [rows] = await connection.query(queryUsers, [email])
