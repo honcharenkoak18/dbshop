@@ -36,9 +36,6 @@ const Post = {
         'SELECT * FROM `' +
         dbName +
         '`.`posts_info` as post ' +
-        'LEFT JOIN `' +
-        dbName +
-        '`.`cmtbypost_cnt` as cmt on `cmt`.post_id = `post`.`id`' +
         'ORDER BY `post`.`date` DESC'
       const [rows] = await connection.query(query)
       return rows
@@ -52,20 +49,17 @@ const Post = {
     try {
       const connection = await db()
       const query =
-        'SELECT `info`.*, `cmt`.* FROM `' +
+        'SELECT `info`.* FROM `' +
         dbName +
         '`.`posts_info` as info ' +
         ' INNER JOIN `' +
         dbName +
         '`.post on `info`.`id` = `post`.`id`' +
-        ' LEFT JOIN `' +
-        dbName +
-        '`.`cmtbypost_cnt` as cmt on `cmt`.post_id = `post`.`id`' +
         ' WHERE (`post`.`title` like ' +
         connection.escape('%' + searchStr + '%') +
-        ') OR (`post`.`short_content` like ' +
+        ' ) OR (`post`.`short_content` like ' +
         connection.escape('%' + searchStr + '%') +
-        ') OR (`post`.`post_content` like ' +
+        ' ) OR (`post`.`post_content` like ' +
         connection.escape('%' + searchStr + '%') +
         ')'
       ;('ORDER BY `info`.`date` DESC')
