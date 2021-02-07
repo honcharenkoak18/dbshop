@@ -58,7 +58,7 @@ VIEW `posts_info` AS
     ((`post`
     JOIN `profile` ON ((`post`.`author_id` = `profile`.`uuid`)))
     LEFT JOIN `cmtbypost_cnt` `cmt` ON ((`cmt`.`post_id` = `post`.`id`)))
-  ORDER BY `post`.`post_date` DESC
+  ORDER BY `post`.`post_date` DESC;
 CREATE
 VIEW `user_info` AS
   SELECT 
@@ -69,4 +69,4 @@ VIEW `user_info` AS
     `prf`.`avatar` AS `avatar`
   FROM
     (`user` `usr`
-    JOIN `profile` `prf` ON ((`prf`.`uuid` = `usr`.`uuid`)))
+    JOIN `profile` `prf` ON ((`prf`.`uuid` = `usr`.`uuid`)));
