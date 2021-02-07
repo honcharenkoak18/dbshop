@@ -259,5 +259,26 @@ const User = {
       throw error
     }
   },
+
+  async checkPassword(uuid, password) {
+    try {
+      const connection = await db()
+      const queryUsers =
+        'SELECT usr.password FROM `' +
+        dbName +
+        '`.`user` as usr ' +
+        'WHERE BIN_TO_UUID(`usr`.`uuid`) = ?'
+
+      const [rows] = await connection.query(queryUsers, [uuid])
+      if (rows.length === 0) {
+        return false
+      }
+      const hashedPassword = rows[0].password
+      return await bcrypt.compare(password, hashedPassword)
+    } catch (error) {
+      console.log('Check Password error: ', error)
+      throw error
+    }
+  },
 }
 module.exports = User

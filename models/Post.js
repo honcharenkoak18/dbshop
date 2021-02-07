@@ -33,17 +33,13 @@ const Post = {
     try {
       const connection = await db()
       const query =
-        'SELECT `post`.`id`, `post`.`title`, `profile`.`user_name` as author,' +
-        ' `post`.`post_date` as date, `post`.`short_content` as short, `cmt`.`comments` FROM `' +
+        'SELECT * FROM `' +
         dbName +
-        '`.`post` ' +
-        'inner join `' +
+        '`.`posts_info` as post ' +
+        'LEFT JOIN `' +
         dbName +
-        '`.`profile` on `post`.`author_id` = `profile`.`uuid` ' +
-        'left join (select `comment`.`post_id`,  count(*) as comments from `' +
-        dbName +
-        '`.`comment` group by `comment`.`post_id`) as cmt on `cmt`.post_id = `post`.`id`' +
-        'order by `post`.`post_date` DESC'
+        '`.`cmtbypost_cnt` as cmt on `cmt`.post_id = `post`.`id`' +
+        'ORDER BY `post`.`date` DESC'
       const [rows] = await connection.query(query)
       return rows
     } catch (error) {
@@ -56,24 +52,23 @@ const Post = {
     try {
       const connection = await db()
       const query =
-        'SELECT `post`.`id`, `post`.`title`, `profile`.`user_name` as author,' +
-        ' `post`.`post_date` as date, `post`.`short_content` as short, `cmt`.`comments` FROM `' +
+        'SELECT `info`.*, `cmt`.* FROM `' +
         dbName +
-        '`.`post` ' +
-        'inner join `' +
+        '`.`posts_info` as info ' +
+        ' INNER JOIN `' +
         dbName +
-        '`.`profile` on `post`.`author_id` = `profile`.`uuid` ' +
-        'left join (select `comment`.`post_id`,  count(*) as comments from `' +
+        '`.post on `info`.`id` = `post`.`id`' +
+        ' LEFT JOIN `' +
         dbName +
-        '`.`comment` group by `comment`.`post_id`) as cmt on `cmt`.post_id = `post`.`id`' +
-        'where (`post`.`title` like ' +
+        '`.`cmtbypost_cnt` as cmt on `cmt`.post_id = `post`.`id`' +
+        ' WHERE (`post`.`title` like ' +
         connection.escape('%' + searchStr + '%') +
         ') OR (`post`.`short_content` like ' +
         connection.escape('%' + searchStr + '%') +
         ') OR (`post`.`post_content` like ' +
         connection.escape('%' + searchStr + '%') +
         ')'
-      ;('order by `post`.`post_date` DESC')
+      ;('ORDER BY `info`.`date` DESC')
       const [rows] = await connection.query(query)
       return rows
     } catch (error) {

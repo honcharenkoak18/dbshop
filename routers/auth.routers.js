@@ -25,7 +25,9 @@ router.post('/login', async function (req, res) {
       )
       return
     }
-    const match = await bcrypt.compare(password, user.password)
+
+    console.log('user: ', user.uuid)
+    const match = await User.checkPassword(user.uuid, password)
     if (!match) {
       res.status(403).send(
         JSON.stringify({
